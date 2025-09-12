@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}YouTube → Whisper → ChatGPT{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="mb-3">YouTube → Local Whisper → ChatGPT</h1>
+  <p class="text-muted">Downloads audio locally with <code>yt-dlp</code>, transcribes with <code>faster-whisper</code>, then sends the transcript to ChatGPT for a summary and a polished "full version".</p>
+
+  <form method="post" action="{{ url_for('process') }}">
+    <div class="mb-3">
+      <label for="youtube_url" class="form-label">YouTube URL</label>
+      <input type="url" class="form-control" id="youtube_url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=..." required>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Whisper model size</label>
+        <select class="form-select" name="whisper_size">
+          {% for size in ["tiny","base","small","medium","large-v2"] %}
+          <option value="{{ size }}" {% if size==default_model %}selected{% endif %}>{{ size }}</option>
+          {% endfor %}
+        </select>
+        <div class="form-text">Larger = better quality, slower.</div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Language (optional)</label>
+        <input type="text" class="form-control" name="language" placeholder="auto">
+        <div class="form-text">Leave empty to auto-detect (e.g., "en", "he", "ru").</div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">OpenAI model (summary/full)</label>
+        <input type="text" class="form-control" value="{{ openai_model }}" disabled>
+        <div class="form-text">Set <code>OPENAI_MODEL</code> in your <code>.env</code> to change.</div>
+      </div>
+    </div>
+
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="checkbox" value="1" id="want_summary" name="want_summary" checked>
+      <label class="form-check-label" for="want_summary">
+        Create summary (Markdown)
+      </label>
+    </div>
+    <div class="form-check mb-4">
+      <input class="form-check-input" type="checkbox" value="1" id="want_full" name="want_full" checked>
+      <label class="form-check-label" for="want_full">
+        Create polished "full version" (Markdown)
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Process</button>
+  </form>
+
+  <hr class="my-4">
+  <h5>Prerequisites</h5>
+  <ol>
+    <li>Install FFmpeg: <code>brew install ffmpeg</code></li>
+    <li>Put your OpenAI API key in <code>.env</code> as <code>OPENAI_API_KEY=...</code></li>
+  </ol>
+</div>
+{% endblock %}

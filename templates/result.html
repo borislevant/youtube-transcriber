@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block title %}Results{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="mb-3">Results</h1>
+
+  <div class="alert alert-success">
+    Done! Download your files below.
+  </div>
+
+  <div class="mb-3">
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('download', job_id=job_id, filename='transcript.txt') }}">Download transcript.txt</a>
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('download', job_id=job_id, filename='subtitles.srt') }}">Download subtitles.srt</a>
+    {% if summary_text %}
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('download', job_id=job_id, filename='summary.md') }}">Download summary.md</a>
+    {% endif %}
+    {% if full_version_text %}
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('download', job_id=job_id, filename='full_version.md') }}">Download full_version.md</a>
+    {% endif %}
+  </div>
+
+  <div class="accordion" id="acc">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="h1">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c1">
+          Transcript (preview)
+        </button>
+      </h2>
+      <div id="c1" class="accordion-collapse collapse show">
+        <div class="accordion-body"><pre class="mb-0 small">{{ full_text|e }}</pre></div>
+      </div>
+    </div>
+
+    {% if summary_text %}
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="h2">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2">
+          Summary (Markdown)
+        </button>
+      </h2>
+      <div id="c2" class="accordion-collapse collapse">
+        <div class="accordion-body"><pre class="mb-0 small">{{ summary_text|e }}</pre></div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if full_version_text %}
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="h3">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3">
+          Full version (Markdown)
+        </button>
+      </h2>
+      <div id="c3" class="accordion-collapse collapse">
+        <div class="accordion-body"><pre class="mb-0 small">{{ full_version_text|e }}</pre></div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="mt-4">
+    <a class="btn btn-secondary" href="{{ url_for('index') }}">← New job</a>
+  </div>
+</div>
+{% endblock %}
