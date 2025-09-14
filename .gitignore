@@ -1,0 +1,5 @@
+# Ignore virtual environment
+work/
+.venv/
+.env
+.env.example
