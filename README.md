@@ -1,4 +1,4 @@
-# YouTube → Local Whisper → ChatGPT (Flask)
+# YouTube Transcriber
 
 A tiny local web GUI that:
 1) Downloads a YouTube video's audio with **yt-dlp**
